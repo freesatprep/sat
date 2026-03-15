@@ -1,27 +1,86 @@
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500&display=swap');
+
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
+/* ── THEME VARIABLES ── */
+:root {
+  --bg:        #d9d5d1;
+  --surface:   #d4b8b8;
+  --surface2:  #c8c0bc;
+  --border:    #bfb8b4;
+  --text:      #111;
+  --text-muted:#777;
+  --accent:    #c0504d;
+  --footer:    #e0d8b8;
+  --dot:       #c4a8a8;
+  --dot-active:#2a2a2a;
+}
+
+body.dark {
+  --bg:        #0f0f0f;
+  --surface:   #1e1e1e;
+  --surface2:  #2a2a2a;
+  --border:    #333;
+  --text:      #f0f0f0;
+  --text-muted:#888;
+  --accent:    #c0504d;
+  --footer:    #1a1a1a;
+  --dot:       #444;
+  --dot-active:#f0f0f0;
+}
+
 body {
-  background: #d9d5d1;
+  background: var(--bg);
   font-family: 'DM Sans', sans-serif;
   min-height: 100vh;
   display: flex;
   flex-direction: column;
   align-items: center;
+  transition: background 0.25s, color 0.25s;
+  color: var(--text);
 }
 
+/* ── TOP NAV ── */
+.top-nav {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  padding: 16px 24px;
+}
+
+/* ── THEME TOGGLE ── */
+.theme-toggle {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  padding: 6px 14px;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 13px;
+  font-weight: 400;
+  color: var(--text-muted);
+  cursor: pointer;
+  transition: all 0.15s;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.theme-toggle:hover { color: var(--text); }
+
+/* ── HERO ── */
 .hero {
   width: 100%;
   display: flex;
   justify-content: center;
-  padding: 80px 40px 60px;
+  padding: 60px 40px 60px;
 }
 
 .hero-title {
   font-family: 'DM Sans', sans-serif;
-  font-size: 64px;
+  font-size: clamp(48px, 10vw, 80px);
   font-weight: 400;
-  line-height: 1.15;
-  color: #111;
+  line-height: 1.1;
+  color: var(--text);
   display: flex;
   flex-direction: column;
   align-items: flex-start;
@@ -31,10 +90,11 @@ body {
 .hero-title .line2 { align-self: center; }
 .hero-title .line3 { align-self: flex-end; }
 
+/* ── DAILY QUESTION ── */
 .daily-label {
-  font-size: 20px;
+  font-size: 18px;
   font-weight: 400;
-  color: #111;
+  color: var(--text);
   margin-bottom: 20px;
 }
 
@@ -43,89 +103,111 @@ body {
   flex-direction: column;
   align-items: center;
   width: 100%;
-  padding: 0 40px 60px;
+  padding: 0 24px 60px;
 }
 
 .question-card {
   display: flex;
-  gap: 20px;
+  flex-direction: column;
+  gap: 16px;
   width: 100%;
-  max-width: 680px;
-  align-items: flex-start;
+  max-width: 540px;
+}
+
+@media (min-width: 560px) {
+  .question-card {
+    flex-direction: row;
+    align-items: flex-start;
+    max-width: 680px;
+    gap: 20px;
+  }
 }
 
 .question-box {
-  flex: 1;
-  background: #d4b8b8;
-  border-radius: 4px;
-  min-height: 250px;
-  aspect-ratio: 1;
+  background: var(--surface);
+  border-radius: 8px;
+  min-height: 180px;
   display: flex;
   align-items: center;
   justify-content: center;
-  color: #999;
-  font-size: 12px;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
+  color: var(--text);
+  font-size: 16px;
+  font-weight: 400;
+  padding: 24px;
+  text-align: center;
+  transition: background 0.25s;
+}
+
+@media (min-width: 560px) {
+  .question-box {
+    flex: 1;
+    aspect-ratio: 1;
+    min-height: 0;
+  }
 }
 
 .options-col {
-  flex: 1;
   display: flex;
   flex-direction: column;
   gap: 10px;
-  justify-content: center;
-  align-self: center;
+  width: 100%;
+}
+
+@media (min-width: 560px) {
+  .options-col {
+    flex: 1;
+    justify-content: center;
+    align-self: center;
+    width: auto;
+  }
 }
 
 .option-btn {
-  background: #d4b8b8;
+  background: var(--surface);
   border: none;
-  border-radius: 4px;
-  padding: 16px;
+  border-radius: 6px;
+  padding: 14px 16px;
   font-family: 'DM Sans', sans-serif;
   font-size: 14px;
-  color: #333;
+  color: var(--text);
   cursor: pointer;
   text-align: center;
   transition: background 0.15s;
 }
-.option-btn:hover { background: #c4a8a8; }
+.option-btn:hover:not(:disabled) { background: var(--surface2); }
 
 .dont-know-btn {
   align-self: flex-end;
   margin-top: 4px;
-  background: #c0504d;
+  background: var(--accent);
   color: #fff;
   border: none;
-  border-radius: 4px;
-  padding: 8px 16px;
+  border-radius: 6px;
+  padding: 9px 18px;
   font-family: 'DM Sans', sans-serif;
   font-size: 13px;
   cursor: pointer;
+  transition: opacity 0.15s;
 }
-.dont-know-btn:hover { opacity: 0.9; }
+.dont-know-btn:hover { opacity: 0.85; }
 
-footer {
-  margin-top: auto;
-  width: 100%;
-  height: 12px;
-  background: #e0d8b8;
-}
-
+/* ── PRACTICE BUTTON ── */
 .practiceMore {
-  margin-top: 4px;
-  background: #c0504d;
+  background: var(--accent);
   color: #fff;
   border: none;
-  border-radius: 4px;
-  padding: 8px 16px;
+  border-radius: 6px;
+  padding: 12px 28px;
   font-family: 'DM Sans', sans-serif;
-  font-size: 13px;
+  font-size: 14px;
+  font-weight: 500;
   cursor: pointer;
+  transition: opacity 0.15s;
+  margin-bottom: 4px;
 }
-.practiceMore:hover { opacity: 0.9; }
+.practiceMore:hover { opacity: 0.85; }
 
+/* ── PHOTOS SECTION ── */
 .photos-section {
   width: 100%;
   padding: 40px 0 60px;
@@ -137,9 +219,9 @@ footer {
 
 .photos-title {
   font-family: 'DM Sans', sans-serif;
-  font-size: 32px;
+  font-size: 28px;
   font-weight: 400;
-  color: #111;
+  color: var(--text);
   align-self: center;
 }
 
@@ -160,9 +242,10 @@ footer {
   margin: 0 2%;
   border-radius: 12px;
   overflow: hidden;
-  background: #d4b8b8;
+  background: var(--surface);
   aspect-ratio: 16/9;
   flex-shrink: 0;
+  transition: background 0.25s;
 }
 
 .carousel-slide img {
@@ -178,7 +261,7 @@ footer {
   display: flex;
   align-items: center;
   justify-content: center;
-  color: #999;
+  color: var(--text-muted);
   font-size: 13px;
   letter-spacing: 0.08em;
 }
@@ -187,7 +270,7 @@ footer {
   position: absolute;
   top: 50%;
   transform: translateY(-50%);
-  background: rgba(0, 0, 0, 0.25);
+  background: rgba(0,0,0,0.25);
   color: #fff;
   border: none;
   border-radius: 50%;
@@ -216,8 +299,17 @@ footer {
   width: 8px;
   height: 8px;
   border-radius: 50%;
-  background: #c4a8a8;
+  background: var(--dot);
   cursor: pointer;
   transition: background 0.15s;
 }
-.carousel-dot.active { background: #2a2a2a; }
+.carousel-dot.active { background: var(--dot-active); }
+
+/* ── FOOTER ── */
+footer {
+  margin-top: auto;
+  width: 100%;
+  height: 12px;
+  background: var(--footer);
+  transition: background 0.25s;
+}

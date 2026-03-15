@@ -4,10 +4,13 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>SAT Practice</title>
-<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="sat_quiz.css">
+<script src="theme.js"></script>
 </head>
 <body>
+
+<!-- MODAL -->
 <div class="modal-overlay" id="modalOverlay">
   <div class="modal">
     <div class="modal-step" id="step1">
@@ -28,15 +31,23 @@
     </div>
   </div>
 </div>
+
+<!-- TOP NAV -->
 <nav class="top-nav">
-  <a href="index.html" class="site-title">SAT Prep</a>
-  <div class="nav-section-pills">
-    <button class="subject-btn">English</button>
-    <button class="subject-btn">Math</button>
-    <button class="subject-btn">Both</button>
+  <a href="index.html" class="site-title">Free SAT Prep</a>
+  <div class="nav-right">
+    <div class="nav-section-pills">
+      <button class="subject-btn">English</button>
+      <button class="subject-btn">Math</button>
+      <button class="subject-btn">Both</button>
+    </div>
+    <button class="theme-toggle" id="themeToggle">☀️ Light</button>
   </div>
 </nav>
+
+<!-- MAIN CARD -->
 <div class="card">
+
   <div class="progress-wrap" id="progressWrap" style="display:none;">
     <div class="progress-top">
       <span class="progress-label" id="progressLabel">Goal: —</span>
@@ -46,6 +57,7 @@
       <div class="progress-bar-fill" id="progressFill"></div>
     </div>
   </div>
+
   <div class="question-area">
     <div class="question-tag" id="questionTag">MATH</div>
     <div class="question-box" id="questionBox">Ready to practice?</div>
@@ -53,15 +65,16 @@
 
   <div class="explanation-banner" id="explanationBanner">
     <div class="explanation-label" id="explanationLabel">Explanation</div>
-    <p>explain</p>
     <div id="explanationText"></div>
   </div>
+
   <div class="options-col" id="optionsCol">
     <button class="option-btn"><span class="option-letter">A</span><span class="option-text"></span></button>
     <button class="option-btn"><span class="option-letter">B</span><span class="option-text"></span></button>
     <button class="option-btn"><span class="option-letter">C</span><span class="option-text"></span></button>
     <button class="option-btn"><span class="option-letter">D</span><span class="option-text"></span></button>
   </div>
+
   <div class="tool-panel" id="englishTools">
     <div class="tool-panel-body">
       <textarea class="notepad-area" id="notepadArea" placeholder="Jot down notes…"></textarea>
@@ -101,9 +114,10 @@
       </div>
     </div>
   </div>
+
   <div class="ai-panel" id="aiPanel">
     <div class="ai-panel-header">
-      <span class="ai-panel-title">🤖 AI TUTOR</span>
+      <span class="ai-panel-title">🤖 AI Tutor</span>
       <button class="ai-close-btn" id="aiCloseBtn">✕</button>
     </div>
     <div class="ai-panel-body" id="aiPanelBody">
@@ -112,6 +126,7 @@
   </div>
 
 </div>
+
 <div class="bottom-bar">
   <button class="back-btn" id="backBtn">← Back</button>
   <button class="skip-btn" id="skipBtn">Skip</button>
