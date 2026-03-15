@@ -13,7 +13,7 @@ let currentIndex = 0;
 let filteredQuestions = [];
 let correctCount = 0;
 let answeredCount = 0;
-let questionHistory = [];
+let questionHistory = []; // stores {index, chosenAnswer} for each visited question
 
 toStep2Btn.addEventListener('click', () => {
   const val = parseInt(goalInput.value);
@@ -54,6 +54,7 @@ startBtn.addEventListener('click', () => {
     btn.classList.toggle('active', btn.textContent === selectedSection);
   });
 
+  window.__currentChosenAnswer = null;
   loadQuestion(0);
 });
 
@@ -79,7 +80,7 @@ function updateProgress() {
   }
 }
 
-function loadQuestion(index, fromBack) {
+function loadQuestion(index, fromBack, restoredAnswer) {
   if (filteredQuestions.length === 0) return;
 
   if (index >= filteredQuestions.length) {
@@ -87,8 +88,11 @@ function loadQuestion(index, fromBack) {
     index = 0;
   }
 
-  if (!fromBack) questionHistory.push(currentIndex);
+  if (!fromBack) {
+    questionHistory.push({ index: currentIndex, chosenAnswer: window.__currentChosenAnswer || null });
+  }
   currentIndex = index;
+  window.__currentChosenAnswer = restoredAnswer !== undefined ? restoredAnswer : null;
 
   const q = filteredQuestions[currentIndex];
   document.getElementById('questionBox').textContent = q.question;
@@ -100,9 +104,25 @@ function loadQuestion(index, fromBack) {
     btn.disabled = false;
   });
 
+  if (restoredAnswer !== undefined && restoredAnswer !== null) {
+    document.querySelectorAll('.option-btn').forEach(b => {
+      b.disabled = true;
+      if (b.textContent === q.answer) {
+        b.style.background = '#4caf50';
+        b.style.color = '#fff';
+      } else if (b.textContent === restoredAnswer && restoredAnswer !== q.answer) {
+        b.style.background = '#c0504d';
+        b.style.color = '#fff';
+      } else {
+        b.style.background = '#2a2a2a';
+        b.style.color = '#fff';
+      }
+    });
+  }
+
   document.getElementById('notepadArea').value = '';
   updateToolPanel(q.section);
-  if (window.__satTracker) window.__satTracker.onQuestionLoad();
+  if (!restoredAnswer && window.__satTracker) window.__satTracker.onQuestionLoad();
 }
 
 function updateToolPanel(section) {
@@ -135,6 +155,7 @@ document.querySelectorAll('.option-btn').forEach(btn => {
 
     answeredCount++;
     const isCorrect = btn.textContent === q.answer;
+    window.__currentChosenAnswer = btn.textContent;
     if (isCorrect) correctCount++;
     if (window.__satTracker) {
       window.__satTracker.onAnswer(isCorrect, q.question);
@@ -194,14 +215,16 @@ document.querySelector('.skip-btn').addEventListener('click', () => {
     window.__satTracker.onSkip(q.question);
     window.__satTracker._lastSkipped = q.question;
   }
+  window.__currentChosenAnswer = '__skipped__';
   setTimeout(() => loadQuestion(currentIndex + 1), 1200);
 });
 
 document.getElementById('backBtn').addEventListener('click', () => {
   if (questionHistory.length <= 1) return;
-  questionHistory.pop(); // remove current
-  const prev = questionHistory.pop(); // get previous
-  loadQuestion(prev, true);
+  questionHistory.pop(); // remove current (unsaved forward entry)
+  const prev = questionHistory.pop(); // get previous snapshot
+  const restoredAnswer = prev.chosenAnswer === '__skipped__' ? null : prev.chosenAnswer;
+  loadQuestion(prev.index, true, restoredAnswer);
 });
 
 
