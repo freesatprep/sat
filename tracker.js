@@ -36,7 +36,7 @@
   let sessionFastestAnswer = null;
   let sessionFirstAnswerTime = null;
   let hasBounced = true;
-  // FIX: accumulate ALL missed/skipped questions, not just the last one
+
   let missedQuestions = [];
   let skippedQuestions = [];
 
@@ -53,14 +53,12 @@
       hasBounced = false;
       sessionSkipped++;
       sessionQuestionLoadTime = Date.now();
-      // FIX: push to array instead of overwriting
       skippedQuestions.push(questionText);
     },
     onQuestionLoad: function () {
       sessionQuestionLoadTime = Date.now();
     },
     onMissed: function (questionText) {
-      // FIX: push to array instead of overwriting
       missedQuestions.push(questionText);
     }
   };
@@ -128,7 +126,6 @@
   async function trackSessionEnd() {
     const secondsSpent = Math.round((Date.now() - sessionStart) / 1000);
     if (secondsSpent < 2) return;
-    // Guard against double-firing (visibilitychange + beforeunload both triggering)
     if (trackSessionEnd._fired) return;
     trackSessionEnd._fired = true;
     try {
@@ -139,8 +136,6 @@
 
       const sessions = stats.totalSessions || 1;
       stats.avgSessionSeconds = Math.round(((stats.avgSessionSeconds || 0) * (sessions - 1) + secondsSpent) / sessions);
-
-      // FIX: save question stats if EITHER answered or skipped (not gated on answered only)
       if (sessionAnswered > 0 || sessionSkipped > 0) {
         stats.totalAnswered = (stats.totalAnswered || 0) + sessionAnswered;
         stats.totalCorrect = (stats.totalCorrect || 0) + sessionCorrect;
@@ -157,8 +152,6 @@
       }
 
       if (hasBounced) stats.bounces = (stats.bounces || 0) + 1;
-
-      // FIX: iterate full arrays so every missed/skipped question is counted, not just the last one
       if (missedQuestions.length > 0) {
         stats.missedQuestions = stats.missedQuestions || {};
         missedQuestions.forEach(mq => {

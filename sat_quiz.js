@@ -19,7 +19,7 @@ let correctCount = 0;
 let answeredCount = 0;
 let questionHistory = [];
 
-// ── MODAL ──
+
 toStep2Btn.addEventListener('click', () => {
   const val = parseInt(goalInput.value);
   if (!val || val < 1 || val > 100) {
@@ -61,7 +61,7 @@ startBtn.addEventListener('click', () => {
   loadQuestion(0);
 });
 
-// ── PROGRESS ──
+
 function updateProgress() {
   if (answeredCount === 0) {
     progressLabel.textContent = 'Goal: ' + goalPercent + '%';
@@ -85,7 +85,6 @@ function updateProgress() {
   }
 }
 
-// ── LOAD QUESTION ──
 function loadQuestion(index, fromBack, restoredAnswer) {
   if (filteredQuestions.length === 0) return;
 
@@ -102,14 +101,12 @@ function loadQuestion(index, fromBack, restoredAnswer) {
 
   const q = filteredQuestions[currentIndex];
 
-  // Update tag
+
   document.getElementById('questionTag').textContent = q.section.toUpperCase();
   document.getElementById('questionBox').textContent = q.question;
 
-  // Hide explanation
   explanationBanner.className = 'explanation-banner';
 
-  // Reset options
   const btns = document.querySelectorAll('.option-btn');
   const letters = ['A', 'B', 'C', 'D'];
   btns.forEach((btn, i) => {
@@ -119,7 +116,6 @@ function loadQuestion(index, fromBack, restoredAnswer) {
     btn.disabled = false;
   });
 
-  // Restore answered state when going back
   if (restoredAnswer !== undefined && restoredAnswer !== null) {
     btns.forEach(b => {
       b.disabled = true;
@@ -132,7 +128,7 @@ function loadQuestion(index, fromBack, restoredAnswer) {
         b.classList.add('other-ans');
       }
     });
-    // Show explanation for restored state
+
     showExplanation(restoredAnswer === q.answer, q);
   }
 
@@ -141,14 +137,11 @@ function loadQuestion(index, fromBack, restoredAnswer) {
   if (!restoredAnswer && window.__satTracker) window.__satTracker.onQuestionLoad();
 }
 
-// ── EXPLANATION ──
 function showExplanation(isCorrect, q) {
   explanationBanner.className = 'explanation-banner ' + (isCorrect ? 'correct' : 'wrong');
   explanationLabel.textContent = isCorrect ? '✓ Correct!' : '✗ Incorrect';
   explanationText.textContent = q.explanation || 'The correct answer is: ' + q.answer;
 }
-
-// ── OPTION CLICKS ──
 document.querySelectorAll('.option-btn').forEach(btn => {
   btn.addEventListener('click', () => {
     if (btn.disabled) return;
@@ -184,7 +177,6 @@ document.querySelectorAll('.option-btn').forEach(btn => {
   });
 });
 
-// ── SUBJECT SWITCHER ──
 document.querySelectorAll('.subject-btn').forEach(btn => {
   btn.addEventListener('click', () => {
     if (!filteredQuestions.length) return;
@@ -217,8 +209,6 @@ document.querySelectorAll('.subject-btn').forEach(btn => {
     loadQuestion(0);
   });
 });
-
-// ── SKIP ──
 document.getElementById('skipBtn').addEventListener('click', () => {
   const q = filteredQuestions[currentIndex];
   if (!q) return;
@@ -241,7 +231,6 @@ document.getElementById('skipBtn').addEventListener('click', () => {
   setTimeout(() => loadQuestion(currentIndex + 1), 2000);
 });
 
-// ── BACK ──
 document.getElementById('backBtn').addEventListener('click', () => {
   if (questionHistory.length <= 1) return;
   questionHistory.pop();
@@ -249,8 +238,6 @@ document.getElementById('backBtn').addEventListener('click', () => {
   const restoredAnswer = prev.chosenAnswer === '__skipped__' ? null : prev.chosenAnswer;
   loadQuestion(prev.index, true, restoredAnswer);
 });
-
-// ── TOOL PANELS ──
 function updateToolPanel(section) {
   const englishTools = document.getElementById('englishTools');
   const mathTools = document.getElementById('mathTools');
@@ -270,8 +257,6 @@ function updateToolPanel(section) {
 document.getElementById('notepadClearBtn').addEventListener('click', () => {
   document.getElementById('notepadArea').value = '';
 });
-
-// ── WHITEBOARD ──
 const mathTabWB = document.getElementById('mathTabWB');
 const mathTabCalc = document.getElementById('mathTabCalc');
 const mathTabGraph = document.getElementById('mathTabGraph');
@@ -375,8 +360,6 @@ document.querySelectorAll('.wb-color-swatch').forEach(swatch => {
 });
 document.getElementById('wbSize').addEventListener('input', e => { wbSize = parseInt(e.target.value); });
 document.getElementById('wbClearBtn').addEventListener('click', () => { ctx.clearRect(0, 0, canvas.width, canvas.height); });
-
-// ── ASK AI ──
 const askAiBtn = document.getElementById('askAiBtn');
 const aiPanel = document.getElementById('aiPanel');
 const aiPanelBody = document.getElementById('aiPanelBody');
