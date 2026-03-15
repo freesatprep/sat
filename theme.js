@@ -1,4 +1,4 @@
-// theme.js — shared light/dark toggle, persists via localStorage
+// theme.js — light/dark toggle, persists via localStorage
 (function () {
   const STORAGE_KEY = 'sat_theme';
 
@@ -7,29 +7,26 @@
   }
 
   function applyTheme(theme) {
-    if (theme === 'dark') {
-      document.body.classList.add('dark');
-    } else {
-      document.body.classList.remove('dark');
-    }
-    // Update all toggle buttons on the page
+    // body may not exist yet when called from <head> — wait for it
+    if (!document.body) return;
+    document.body.classList.toggle('dark', theme === 'dark');
     document.querySelectorAll('.theme-toggle').forEach(btn => {
       btn.textContent = theme === 'dark' ? '☀️ Light' : '🌙 Dark';
     });
   }
 
-  // Apply immediately on load (before paint) to avoid flash
-  applyTheme(getTheme());
+  // Wire up clicks using delegation on document so it works
+  // regardless of when this script runs relative to the DOM
+  document.addEventListener('click', function (e) {
+    if (e.target.closest('.theme-toggle')) {
+      const next = getTheme() === 'dark' ? 'light' : 'dark';
+      localStorage.setItem(STORAGE_KEY, next);
+      applyTheme(next);
+    }
+  });
 
-  document.addEventListener('DOMContentLoaded', () => {
+  // Apply saved theme as soon as body is available
+  document.addEventListener('DOMContentLoaded', function () {
     applyTheme(getTheme());
-
-    document.querySelectorAll('.theme-toggle').forEach(btn => {
-      btn.addEventListener('click', () => {
-        const next = getTheme() === 'dark' ? 'light' : 'dark';
-        localStorage.setItem(STORAGE_KEY, next);
-        applyTheme(next);
-      });
-    });
   });
 })();
