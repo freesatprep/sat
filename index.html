@@ -6,13 +6,36 @@
 <title>Free SAT Test Prep</title>
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="sat_landing.css">
-<script src="theme.js"></script>
+<script>
+  // Apply saved theme before paint to avoid flash
+  if (localStorage.getItem('sat_theme') === 'dark') document.documentElement.classList.add('dark-pre');
+</script>
+<style>
+  .dark-pre body, body.dark {
+    --bg:#0f0f0f;--surface:#1e1e1e;--surface2:#2a2a2a;--border:#333;
+    --text:#f0f0f0;--text-muted:#888;--footer:#1a1a1a;--dot:#444;--dot-active:#f0f0f0;
+  }
+</style>
 </head>
 <body>
 
 <nav class="top-nav">
-  <button class="theme-toggle" id="themeToggle">☀️ Light</button>
+  <button class="theme-toggle" id="themeToggle" onclick="
+    var isDark = document.body.classList.toggle('dark');
+    localStorage.setItem('sat_theme', isDark ? 'dark' : 'light');
+    this.textContent = isDark ? '☀️ Light' : '🌙 Dark';
+  ">🌙 Dark</button>
 </nav>
+<script>
+  // Sync body class and button label on load
+  (function() {
+    var btn = document.getElementById('themeToggle');
+    if (localStorage.getItem('sat_theme') === 'dark') {
+      document.body.classList.add('dark');
+      if (btn) btn.textContent = '☀️ Light';
+    }
+  })();
+</script>
 
 <section class="hero">
   <h1 class="hero-title">
