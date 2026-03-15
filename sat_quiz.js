@@ -5,7 +5,11 @@ const goalInput = document.getElementById('goalInput');
 const toStep2Btn = document.getElementById('toStep2');
 const startBtn = document.getElementById('startBtn');
 const progressLabel = document.getElementById('progressLabel');
+const progressPct = document.getElementById('progressPct');
 const progressFill = document.getElementById('progressFill');
+const explanationBanner = document.getElementById('explanationBanner');
+const explanationText = document.getElementById('explanationText');
+const explanationLabel = document.getElementById('explanationLabel');
 
 let goalPercent = 0;
 let selectedSection = null;
@@ -13,16 +17,17 @@ let currentIndex = 0;
 let filteredQuestions = [];
 let correctCount = 0;
 let answeredCount = 0;
-let questionHistory = []; // stores {index, chosenAnswer} for each visited question
+let questionHistory = [];
 
+// ── MODAL ──
 toStep2Btn.addEventListener('click', () => {
   const val = parseInt(goalInput.value);
   if (!val || val < 1 || val > 100) {
-    goalInput.style.outline = '2px solid #c0504d';
+    goalInput.style.borderColor = '#f87171';
     return;
   }
   goalPercent = val;
-  goalInput.style.outline = '';
+  goalInput.style.borderColor = '';
   step1.classList.add('hidden');
   step2.classList.remove('hidden');
 });
@@ -46,9 +51,7 @@ startBtn.addEventListener('click', () => {
   filteredQuestions.sort(() => Math.random() - 0.5);
 
   document.getElementById('progressWrap').style.display = 'flex';
-  progressFill.style.width = '100%';
   progressFill.classList.add('blue');
-  progressLabel.textContent = 'Goal: ' + goalPercent + '%';
 
   document.querySelectorAll('.subject-btn').forEach(btn => {
     btn.classList.toggle('active', btn.textContent === selectedSection);
@@ -58,17 +61,19 @@ startBtn.addEventListener('click', () => {
   loadQuestion(0);
 });
 
+// ── PROGRESS ──
 function updateProgress() {
   if (answeredCount === 0) {
     progressLabel.textContent = 'Goal: ' + goalPercent + '%';
+    progressPct.textContent = '';
     progressFill.style.width = '100%';
-    progressFill.classList.remove('red');
-    progressFill.classList.remove('green');
+    progressFill.classList.remove('red', 'green');
     progressFill.classList.add('blue');
     return;
   }
   const pct = Math.round((correctCount / answeredCount) * 100);
-  progressLabel.textContent = correctCount + '/' + answeredCount + ' (' + pct + '%) — Goal: ' + goalPercent + '%';
+  progressLabel.textContent = correctCount + '/' + answeredCount + ' correct — Goal: ' + goalPercent + '%';
+  progressPct.textContent = pct + '%';
   progressFill.style.width = pct + '%';
   progressFill.classList.remove('blue');
   if (pct >= goalPercent) {
@@ -80,6 +85,7 @@ function updateProgress() {
   }
 }
 
+// ── LOAD QUESTION ──
 function loadQuestion(index, fromBack, restoredAnswer) {
   if (filteredQuestions.length === 0) return;
 
@@ -95,29 +101,39 @@ function loadQuestion(index, fromBack, restoredAnswer) {
   window.__currentChosenAnswer = restoredAnswer !== undefined ? restoredAnswer : null;
 
   const q = filteredQuestions[currentIndex];
+
+  // Update tag
+  document.getElementById('questionTag').textContent = q.section.toUpperCase();
   document.getElementById('questionBox').textContent = q.question;
 
-  document.querySelectorAll('.option-btn').forEach((btn, i) => {
-    btn.textContent = q.options[i];
-    btn.style.background = '';
-    btn.style.color = '';
+  // Hide explanation
+  explanationBanner.className = 'explanation-banner';
+
+  // Reset options
+  const btns = document.querySelectorAll('.option-btn');
+  const letters = ['A', 'B', 'C', 'D'];
+  btns.forEach((btn, i) => {
+    btn.querySelector('.option-text').textContent = q.options[i];
+    btn.querySelector('.option-letter').textContent = letters[i];
+    btn.className = 'option-btn';
     btn.disabled = false;
   });
 
+  // Restore answered state when going back
   if (restoredAnswer !== undefined && restoredAnswer !== null) {
-    document.querySelectorAll('.option-btn').forEach(b => {
+    btns.forEach(b => {
       b.disabled = true;
-      if (b.textContent === q.answer) {
-        b.style.background = '#4caf50';
-        b.style.color = '#fff';
-      } else if (b.textContent === restoredAnswer && restoredAnswer !== q.answer) {
-        b.style.background = '#c0504d';
-        b.style.color = '#fff';
+      const text = b.querySelector('.option-text').textContent;
+      if (text === q.answer) {
+        b.classList.add('correct-ans');
+      } else if (text === restoredAnswer && restoredAnswer !== q.answer) {
+        b.classList.add('wrong-ans');
       } else {
-        b.style.background = '#2a2a2a';
-        b.style.color = '#fff';
+        b.classList.add('other-ans');
       }
     });
+    // Show explanation for restored state
+    showExplanation(restoredAnswer === q.answer, q);
   }
 
   document.getElementById('notepadArea').value = '';
@@ -125,37 +141,38 @@ function loadQuestion(index, fromBack, restoredAnswer) {
   if (!restoredAnswer && window.__satTracker) window.__satTracker.onQuestionLoad();
 }
 
-function updateToolPanel(section) {
-  const englishTools = document.getElementById('englishTools');
-  const mathTools = document.getElementById('mathTools');
-
-  if (section === 'English') {
-    englishTools.classList.add('visible');
-    mathTools.classList.remove('visible');
-  } else if (section === 'Math') {
-    mathTools.classList.add('visible');
-    englishTools.classList.remove('visible');
-    setTimeout(initCanvas, 0);
-  } else {
-    englishTools.classList.remove('visible');
-    mathTools.classList.remove('visible');
-  }
+// ── EXPLANATION ──
+function showExplanation(isCorrect, q) {
+  explanationBanner.className = 'explanation-banner ' + (isCorrect ? 'correct' : 'wrong');
+  explanationLabel.textContent = isCorrect ? '✓ Correct!' : '✗ Incorrect';
+  explanationText.textContent = q.explanation || 'The correct answer is: ' + q.answer;
 }
 
+// ── OPTION CLICKS ──
 document.querySelectorAll('.option-btn').forEach(btn => {
   btn.addEventListener('click', () => {
     if (btn.disabled) return;
     const q = filteredQuestions[currentIndex];
+    const chosen = btn.querySelector('.option-text').textContent;
+    const isCorrect = chosen === q.answer;
+
+    window.__currentChosenAnswer = chosen;
 
     document.querySelectorAll('.option-btn').forEach(b => {
       b.disabled = true;
-      b.style.background = b.textContent === q.answer ? '#4caf50' : '#2a2a2a';
-      b.style.color = '#fff';
+      const text = b.querySelector('.option-text').textContent;
+      if (text === q.answer) {
+        b.classList.add('correct-ans');
+      } else if (text === chosen && !isCorrect) {
+        b.classList.add('wrong-ans');
+      } else {
+        b.classList.add('other-ans');
+      }
     });
 
+    showExplanation(isCorrect, q);
+
     answeredCount++;
-    const isCorrect = btn.textContent === q.answer;
-    window.__currentChosenAnswer = btn.textContent;
     if (isCorrect) correctCount++;
     if (window.__satTracker) {
       window.__satTracker.onAnswer(isCorrect, q.question);
@@ -163,14 +180,14 @@ document.querySelectorAll('.option-btn').forEach(btn => {
     }
     updateProgress();
 
-    setTimeout(() => loadQuestion(currentIndex + 1), 1200);
+    setTimeout(() => loadQuestion(currentIndex + 1), 2000);
   });
 });
 
+// ── SUBJECT SWITCHER ──
 document.querySelectorAll('.subject-btn').forEach(btn => {
   btn.addEventListener('click', () => {
     if (!filteredQuestions.length) return;
-
     const newSection = btn.textContent;
 
     document.querySelectorAll('.subject-btn').forEach(b => b.classList.remove('active'));
@@ -201,37 +218,60 @@ document.querySelectorAll('.subject-btn').forEach(btn => {
   });
 });
 
-document.querySelector('.skip-btn').addEventListener('click', () => {
+// ── SKIP ──
+document.getElementById('skipBtn').addEventListener('click', () => {
   const q = filteredQuestions[currentIndex];
   if (!q) return;
 
+  window.__currentChosenAnswer = '__skipped__';
+
   document.querySelectorAll('.option-btn').forEach(b => {
     b.disabled = true;
-    b.style.background = b.textContent === q.answer ? '#4caf50' : '#2a2a2a';
-    b.style.color = '#fff';
+    const text = b.querySelector('.option-text').textContent;
+    if (text === q.answer) b.classList.add('correct-ans');
+    else b.classList.add('other-ans');
   });
+
+  showExplanation(false, q);
 
   if (window.__satTracker) {
     window.__satTracker.onSkip(q.question);
     window.__satTracker._lastSkipped = q.question;
   }
-  window.__currentChosenAnswer = '__skipped__';
-  setTimeout(() => loadQuestion(currentIndex + 1), 1200);
+  setTimeout(() => loadQuestion(currentIndex + 1), 2000);
 });
 
+// ── BACK ──
 document.getElementById('backBtn').addEventListener('click', () => {
   if (questionHistory.length <= 1) return;
-  questionHistory.pop(); // remove current (unsaved forward entry)
-  const prev = questionHistory.pop(); // get previous snapshot
+  questionHistory.pop();
+  const prev = questionHistory.pop();
   const restoredAnswer = prev.chosenAnswer === '__skipped__' ? null : prev.chosenAnswer;
   loadQuestion(prev.index, true, restoredAnswer);
 });
 
+// ── TOOL PANELS ──
+function updateToolPanel(section) {
+  const englishTools = document.getElementById('englishTools');
+  const mathTools = document.getElementById('mathTools');
+  if (section === 'English') {
+    englishTools.classList.add('visible');
+    mathTools.classList.remove('visible');
+  } else if (section === 'Math') {
+    mathTools.classList.add('visible');
+    englishTools.classList.remove('visible');
+    setTimeout(initCanvas, 0);
+  } else {
+    englishTools.classList.remove('visible');
+    mathTools.classList.remove('visible');
+  }
+}
 
 document.getElementById('notepadClearBtn').addEventListener('click', () => {
   document.getElementById('notepadArea').value = '';
 });
 
+// ── WHITEBOARD ──
 const mathTabWB = document.getElementById('mathTabWB');
 const mathTabCalc = document.getElementById('mathTabCalc');
 const mathTabGraph = document.getElementById('mathTabGraph');
@@ -245,8 +285,7 @@ let isDrawing = false;
 let wbMode = 'pen';
 let wbColor = '#111111';
 let wbSize = 3;
-let lastX = 0;
-let lastY = 0;
+let lastX = 0, lastY = 0;
 let canvasReady = false;
 
 function initCanvas() {
@@ -257,7 +296,6 @@ function initCanvas() {
   if (imageData) ctx.putImageData(imageData, 0, 0);
   canvasReady = true;
 }
-
 window.addEventListener('resize', initCanvas);
 
 let calcInstance = null;
@@ -290,18 +328,11 @@ function getPos(e) {
   };
 }
 
-function startDraw(e) {
-  isDrawing = true;
-  const p = getPos(e);
-  lastX = p.x;
-  lastY = p.y;
-}
-
+function startDraw(e) { isDrawing = true; const p = getPos(e); lastX = p.x; lastY = p.y; }
 function draw(e) {
   if (!isDrawing) return;
   e.preventDefault();
   const p = getPos(e);
-
   ctx.beginPath();
   ctx.moveTo(lastX, lastY);
   ctx.lineTo(p.x, p.y);
@@ -310,14 +341,9 @@ function draw(e) {
   ctx.lineJoin = 'round';
   ctx.strokeStyle = wbMode === 'eraser' ? '#ffffff' : wbColor;
   ctx.stroke();
-
-  lastX = p.x;
-  lastY = p.y;
+  lastX = p.x; lastY = p.y;
 }
-
-function stopDraw() {
-  isDrawing = false;
-}
+function stopDraw() { isDrawing = false; }
 
 canvas.addEventListener('mousedown', startDraw);
 canvas.addEventListener('mousemove', draw);
@@ -332,13 +358,11 @@ document.getElementById('wbPenBtn').addEventListener('click', () => {
   document.getElementById('wbPenBtn').classList.add('active');
   document.getElementById('wbEraserBtn').classList.remove('active');
 });
-
 document.getElementById('wbEraserBtn').addEventListener('click', () => {
   wbMode = 'eraser';
   document.getElementById('wbEraserBtn').classList.add('active');
   document.getElementById('wbPenBtn').classList.remove('active');
 });
-
 document.querySelectorAll('.wb-color-swatch').forEach(swatch => {
   swatch.addEventListener('click', () => {
     wbColor = swatch.dataset.color;
@@ -349,22 +373,15 @@ document.querySelectorAll('.wb-color-swatch').forEach(swatch => {
     document.getElementById('wbEraserBtn').classList.remove('active');
   });
 });
+document.getElementById('wbSize').addEventListener('input', e => { wbSize = parseInt(e.target.value); });
+document.getElementById('wbClearBtn').addEventListener('click', () => { ctx.clearRect(0, 0, canvas.width, canvas.height); });
 
-document.getElementById('wbSize').addEventListener('input', e => {
-  wbSize = parseInt(e.target.value);
-});
-
-document.getElementById('wbClearBtn').addEventListener('click', () => {
-  ctx.clearRect(0, 0, canvas.width, canvas.height);
-});
-
+// ── ASK AI ──
 const askAiBtn = document.getElementById('askAiBtn');
 const aiPanel = document.getElementById('aiPanel');
 const aiPanelBody = document.getElementById('aiPanelBody');
 
-document.getElementById('aiCloseBtn').addEventListener('click', () => {
-  aiPanel.classList.remove('visible');
-});
+document.getElementById('aiCloseBtn').addEventListener('click', () => { aiPanel.classList.remove('visible'); });
 
 askAiBtn.addEventListener('click', () => {
   if (!filteredQuestions.length) return;
@@ -397,18 +414,14 @@ Instructions:
     </div>`;
 
   document.getElementById('aiPromptText').textContent = prompt;
-
   document.getElementById('aiCopyBtn').addEventListener('click', () => {
     navigator.clipboard.writeText(prompt).then(() => {
       const btn = document.getElementById('aiCopyBtn');
       btn.textContent = '✅ Copied!';
-      btn.style.background = '#4caf50';
-      setTimeout(() => {
-        btn.textContent = '📋 Copy Prompt';
-        btn.style.background = '';
-      }, 2000);
+      setTimeout(() => { btn.textContent = '📋 Copy Prompt'; }, 2000);
     });
   });
 
   aiPanel.classList.add('visible');
+  aiPanel.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
 });
