@@ -31,6 +31,8 @@ body {
   padding: 0;
   overflow-x: hidden;
 }
+
+/* ── TOP NAV ── */
 .top-nav {
   width: 100%;
   display: flex;
@@ -78,6 +80,8 @@ body {
   border-color: var(--accent);
   font-weight: 600;
 }
+
+/* ── MAIN LAYOUT ── */
 .card {
   width: 100%;
   max-width: 600px;
@@ -87,6 +91,7 @@ body {
   padding: 0 0 120px 0;
 }
 
+/* ── PROGRESS ── */
 .progress-wrap {
   padding: 16px 20px 12px;
   display: flex;
@@ -133,6 +138,7 @@ body {
 .progress-bar-fill.red { background: var(--wrong); }
 .progress-bar-fill.blue { background: var(--accent); }
 
+/* ── QUESTION AREA ── */
 .question-area {
   padding: 20px 20px 16px;
 }
@@ -156,6 +162,8 @@ body {
   letter-spacing: -0.02em;
   min-height: 80px;
 }
+
+/* ── EXPLANATION BANNER ── */
 .explanation-banner {
   margin: 0 20px;
   border-radius: var(--radius-sm);
@@ -194,6 +202,7 @@ body {
   to { opacity: 1; transform: translateY(0); }
 }
 
+/* ── OPTIONS ── */
 .options-col {
   display: flex;
   flex-direction: column;
@@ -269,6 +278,8 @@ body {
 .option-btn.other-ans {
   opacity: 0.45;
 }
+
+/* ── TOOL PANEL ── */
 .tool-panel {
   display: none;
   flex-direction: column;
@@ -388,6 +399,8 @@ body {
 }
 
 .desmos-wrap { width: 100%; height: 260px; border-radius: var(--radius-sm); overflow: hidden; }
+
+/* ── BOTTOM BAR (fixed) ── */
 .bottom-bar {
   position: fixed;
   bottom: 0;
@@ -447,6 +460,8 @@ body {
   flex-shrink: 0;
 }
 .ask-ai-btn:hover { opacity: 0.85; }
+
+/* ── AI PANEL ── */
 .ai-panel {
   display: none;
   flex-direction: column;
@@ -519,6 +534,8 @@ body {
 .ai-copy-btn:hover { opacity: 0.85; }
 
 .ai-copy-hint { font-size: 12px; color: var(--text-muted); }
+
+/* ── MODAL ── */
 .modal-overlay {
   position: fixed;
   inset: 0;
@@ -612,10 +629,22 @@ body {
 }
 .modal-btn:hover:not(:disabled) { opacity: 0.85; }
 .modal-btn:disabled { opacity: 0.25; cursor: not-allowed; }
+
+/* ── DESKTOP ── */
 @media (min-width: 640px) {
-  .card { padding-bottom: 100px; }
-  .question-box { font-size: 26px; }
-  .option-btn { font-size: 16px; padding: 20px 22px; }
-  .bottom-bar { justify-content: center; }
-  .bottom-bar > * { max-width: 600px; }
+  .top-nav { padding: 18px 40px; }
+  .site-title { font-size: 22px; }
+  .subject-btn { font-size: 14px; padding: 7px 18px; }
+  .card { max-width: 680px; padding-bottom: 110px; }
+  .question-area { padding: 32px 32px 20px; }
+  .question-tag { font-size: 12px; margin-bottom: 14px; }
+  .question-box { font-size: 28px; min-height: 90px; }
+  .explanation-banner { margin: 0 32px; font-size: 15px; padding: 16px 20px; }
+  .options-col { padding: 20px 32px; gap: 12px; }
+  .option-btn { padding: 20px 22px; font-size: 16px; }
+  .option-letter { width: 32px; height: 32px; font-size: 13px; }
+  .tool-panel { margin: 0 32px; }
+  .ai-panel { margin: 0 32px; }
+  .progress-wrap { padding: 20px 32px 14px; }
+  .bottom-bar { padding: 14px 40px; justify-content: center; gap: 12px; }
 }
