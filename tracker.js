@@ -36,6 +36,9 @@
   let sessionFastestAnswer = null;
   let sessionFirstAnswerTime = null;
   let hasBounced = true;
+  // FIX: accumulate ALL missed/skipped questions, not just the last one
+  let missedQuestions = [];
+  let skippedQuestions = [];
 
   window.__satTracker = {
     onAnswer: function (isCorrect, questionText) {
@@ -50,13 +53,15 @@
       hasBounced = false;
       sessionSkipped++;
       sessionQuestionLoadTime = Date.now();
-      window.__satTracker._lastSkipped = questionText;
+      // FIX: push to array instead of overwriting
+      skippedQuestions.push(questionText);
     },
     onQuestionLoad: function () {
       sessionQuestionLoadTime = Date.now();
     },
     onMissed: function (questionText) {
-      window.__satTracker._missedQuestion = questionText;
+      // FIX: push to array instead of overwriting
+      missedQuestions.push(questionText);
     }
   };
 
@@ -123,6 +128,9 @@
   async function trackSessionEnd() {
     const secondsSpent = Math.round((Date.now() - sessionStart) / 1000);
     if (secondsSpent < 2) return;
+    // Guard against double-firing (visibilitychange + beforeunload both triggering)
+    if (trackSessionEnd._fired) return;
+    trackSessionEnd._fired = true;
     try {
       const stats = await fetchStats();
 
@@ -132,7 +140,8 @@
       const sessions = stats.totalSessions || 1;
       stats.avgSessionSeconds = Math.round(((stats.avgSessionSeconds || 0) * (sessions - 1) + secondsSpent) / sessions);
 
-      if (sessionAnswered > 0) {
+      // FIX: save question stats if EITHER answered or skipped (not gated on answered only)
+      if (sessionAnswered > 0 || sessionSkipped > 0) {
         stats.totalAnswered = (stats.totalAnswered || 0) + sessionAnswered;
         stats.totalCorrect = (stats.totalCorrect || 0) + sessionCorrect;
         stats.totalSkipped = (stats.totalSkipped || 0) + sessionSkipped;
@@ -149,16 +158,19 @@
 
       if (hasBounced) stats.bounces = (stats.bounces || 0) + 1;
 
-      if (window.__satTracker._missedQuestion) {
+      // FIX: iterate full arrays so every missed/skipped question is counted, not just the last one
+      if (missedQuestions.length > 0) {
         stats.missedQuestions = stats.missedQuestions || {};
-        const mq = window.__satTracker._missedQuestion;
-        stats.missedQuestions[mq] = (stats.missedQuestions[mq] || 0) + 1;
+        missedQuestions.forEach(mq => {
+          stats.missedQuestions[mq] = (stats.missedQuestions[mq] || 0) + 1;
+        });
       }
 
-      if (sessionSkipped > 0 && window.__satTracker._lastSkipped) {
+      if (skippedQuestions.length > 0) {
         stats.skippedQuestions = stats.skippedQuestions || {};
-        const sq = window.__satTracker._lastSkipped;
-        stats.skippedQuestions[sq] = (stats.skippedQuestions[sq] || 0) + 1;
+        skippedQuestions.forEach(sq => {
+          stats.skippedQuestions[sq] = (stats.skippedQuestions[sq] || 0) + 1;
+        });
       }
 
       await saveStats(stats);
@@ -257,5 +269,9 @@
   };
 
   trackPageLoad();
+  // beforeunload works on desktop; visibilitychange catches mobile tab-switches/kills
   window.addEventListener('beforeunload', () => { trackSessionEnd(); });
+  document.addEventListener('visibilitychange', () => {
+    if (document.visibilityState === 'hidden') trackSessionEnd();
+  });
 })();
