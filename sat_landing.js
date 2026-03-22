@@ -1,4 +1,3 @@
-// ── DAILY QUESTION ──
 const today = new Date();
 const dayIndex = (today.getFullYear() * 365 + today.getMonth() * 31 + today.getDate()) % questions.length;
 const dailyQ = questions[dayIndex];
@@ -6,7 +5,7 @@ const dailyQ = questions[dayIndex];
 const questionBox = document.getElementById('questionBox');
 const optionBtns = document.querySelectorAll('.option-btn');
 
-questionBox.textContent = dailyQ.question;
+questionBox.innerHTML = '<img src="' + dailyQ.image + '" alt="Question" style="max-width:100%;max-height:100%;object-fit:contain;border-radius:4px;">';
 optionBtns.forEach((btn, i) => { btn.textContent = dailyQ.options[i]; });
 
 optionBtns.forEach(btn => {
@@ -32,7 +31,6 @@ document.querySelector('.practiceMore').addEventListener('click', () => {
   window.location.href = 'sat_quiz.html';
 });
 
-// ── CAROUSEL ──
 const track = document.getElementById('carouselTrack');
 const dotsContainer = document.getElementById('carouselDots');
 const slideWidth = 76;
@@ -76,7 +74,6 @@ document.getElementById('prevBtn').addEventListener('click', () => goTo(current 
 document.getElementById('nextBtn').addEventListener('click', () => goTo(current + 1));
 goTo(1, false);
 
-// ── BEFORE / AFTER SLIDERS ──
 function initBASlider(slider) {
   const before = slider.querySelector('.ba-before');
   const handle  = slider.querySelector('.ba-handle');
@@ -90,7 +87,6 @@ function initBASlider(slider) {
     before.style.width = pctStr;
     handle.style.left  = pctStr;
 
-    // If using real images, keep before-img full width so it doesn't stretch
     const beforeImg = before.querySelector('img');
     if (beforeImg) {
       beforeImg.style.width  = slider.offsetWidth + 'px';
@@ -98,25 +94,19 @@ function initBASlider(slider) {
     }
   }
 
-  // Mouse
   slider.addEventListener('mousedown', e => { dragging = true; setPosition(e.clientX); e.preventDefault(); });
   window.addEventListener('mousemove', e => { if (dragging) setPosition(e.clientX); });
   window.addEventListener('mouseup',   ()  => { dragging = false; });
 
-  // Touch
   slider.addEventListener('touchstart', e => { dragging = true; setPosition(e.touches[0].clientX); }, { passive: true });
   window.addEventListener('touchmove',  e => { if (dragging) setPosition(e.touches[0].clientX); }, { passive: true });
   window.addEventListener('touchend',   ()  => { dragging = false; });
 
-  // Set initial position to 50%
   setPosition(slider.getBoundingClientRect().left + slider.offsetWidth * 0.5);
 }
 
-// Init all sliders (including inside cloned carousel slides)
 document.querySelectorAll('.ba-slider').forEach(initBASlider);
 
-// ── WEBSITES ──
-// ↓↓↓ ADD YOUR SITES HERE ↓↓↓
 const websites = [
   {
     name: "Free SAT Prep",
@@ -150,7 +140,6 @@ websites.forEach(site => {
   grid.appendChild(a);
 });
 
-// ── SITE STATS ──
 (async function () {
   const BIN_ID  = '69b4c063b7ec241ddc686bd7';
   const API_KEY = '$2a$10$i96ZlacCYBbYPjVnqJtHT.wNlxB2hRk7WHGsDDF1UWgpPy3Ynxz4C';
@@ -215,7 +204,5 @@ websites.forEach(site => {
     const countryEl = document.getElementById('s-country');
     if (countryEl) countryEl.textContent = topCountry;
 
-  } catch (e) {
-    // silently fail — stats section just stays at dashes
-  }
+  } catch (e) {}
 })();

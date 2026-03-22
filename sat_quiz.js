@@ -19,7 +19,6 @@ let correctCount = 0;
 let answeredCount = 0;
 let questionHistory = [];
 
-
 toStep2Btn.addEventListener('click', () => {
   const val = parseInt(goalInput.value);
   if (!val || val < 1 || val > 100) {
@@ -61,7 +60,6 @@ startBtn.addEventListener('click', () => {
   loadQuestion(0);
 });
 
-
 function updateProgress() {
   if (answeredCount === 0) {
     progressLabel.textContent = 'Goal: ' + goalPercent + '%';
@@ -101,9 +99,10 @@ function loadQuestion(index, fromBack, restoredAnswer) {
 
   const q = filteredQuestions[currentIndex];
 
-
   document.getElementById('questionTag').textContent = q.section.toUpperCase();
-  document.getElementById('questionBox').textContent = q.question;
+
+  const questionBox = document.getElementById('questionBox');
+  questionBox.innerHTML = '<img src="' + q.image + '" alt="Question" style="max-width:100%;height:auto;border-radius:4px;display:block;">';
 
   explanationBanner.className = 'explanation-banner';
 
@@ -142,6 +141,7 @@ function showExplanation(isCorrect, q) {
   explanationLabel.textContent = isCorrect ? '✓ Correct!' : '✗ Incorrect';
   explanationText.textContent = q.explanation || 'The correct answer is: ' + q.answer;
 }
+
 document.querySelectorAll('.option-btn').forEach(btn => {
   btn.addEventListener('click', () => {
     if (btn.disabled) return;
@@ -168,8 +168,8 @@ document.querySelectorAll('.option-btn').forEach(btn => {
     answeredCount++;
     if (isCorrect) correctCount++;
     if (window.__satTracker) {
-      window.__satTracker.onAnswer(isCorrect, q.question);
-      if (!isCorrect) window.__satTracker.onMissed(q.question);
+      window.__satTracker.onAnswer(isCorrect, q.image);
+      if (!isCorrect) window.__satTracker.onMissed(q.image);
     }
     updateProgress();
 
@@ -209,6 +209,7 @@ document.querySelectorAll('.subject-btn').forEach(btn => {
     loadQuestion(0);
   });
 });
+
 document.getElementById('skipBtn').addEventListener('click', () => {
   const q = filteredQuestions[currentIndex];
   if (!q) return;
@@ -225,8 +226,8 @@ document.getElementById('skipBtn').addEventListener('click', () => {
   showExplanation(false, q);
 
   if (window.__satTracker) {
-    window.__satTracker.onSkip(q.question);
-    window.__satTracker._lastSkipped = q.question;
+    window.__satTracker.onSkip(q.image);
+    window.__satTracker._lastSkipped = q.image;
   }
   setTimeout(() => loadQuestion(currentIndex + 1), 2000);
 });
@@ -238,6 +239,7 @@ document.getElementById('backBtn').addEventListener('click', () => {
   const restoredAnswer = prev.chosenAnswer === '__skipped__' ? null : prev.chosenAnswer;
   loadQuestion(prev.index, true, restoredAnswer);
 });
+
 function updateToolPanel(section) {
   const englishTools = document.getElementById('englishTools');
   const mathTools = document.getElementById('mathTools');
@@ -257,6 +259,7 @@ function updateToolPanel(section) {
 document.getElementById('notepadClearBtn').addEventListener('click', () => {
   document.getElementById('notepadArea').value = '';
 });
+
 const mathTabWB = document.getElementById('mathTabWB');
 const mathTabCalc = document.getElementById('mathTabCalc');
 const mathTabGraph = document.getElementById('mathTabGraph');
@@ -360,6 +363,7 @@ document.querySelectorAll('.wb-color-swatch').forEach(swatch => {
 });
 document.getElementById('wbSize').addEventListener('input', e => { wbSize = parseInt(e.target.value); });
 document.getElementById('wbClearBtn').addEventListener('click', () => { ctx.clearRect(0, 0, canvas.width, canvas.height); });
+
 const askAiBtn = document.getElementById('askAiBtn');
 const aiPanel = document.getElementById('aiPanel');
 const aiPanelBody = document.getElementById('aiPanelBody');
@@ -374,8 +378,7 @@ askAiBtn.addEventListener('click', () => {
   const prompt = `You are an SAT tutor.
 Please solve the following SAT question and explain it clearly.
 
-Question:
-${q.question}
+Question image: ${q.image}
 
 Answer Choices:
 A) ${q.options[0]}

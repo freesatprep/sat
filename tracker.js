@@ -170,7 +170,6 @@
     } catch (e) {}
   }
 
-
   function _chk(n) {
     n = +n;
     if (isNaN(n) || !Number.isInteger(n)) return false;
@@ -262,7 +261,6 @@
   };
 
   trackPageLoad();
-  // beforeunload works on desktop; visibilitychange catches mobile tab-switches/kills
   window.addEventListener('beforeunload', () => { trackSessionEnd(); });
   document.addEventListener('visibilitychange', () => {
     if (document.visibilityState === 'hidden') trackSessionEnd();
