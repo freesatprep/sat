@@ -707,7 +707,176 @@ const questions = [
   explanation: "Since f(7) = 0 and f(−3) = 0, we can write f(x) = a(x − 7)(x + 3), which gives b = −4a. So a + b = a − 4a = −3a. Since a is an integer greater than 1, a + b = −3a ≤ −6. Of the choices, only −6 is a multiple of 3 that is ≤ −6.",
   section: "Math"
 },
-
-
+{
+  id: "m20",
+  image: "m20.png",
+  question: "What is 20% of 440?",
+  options: ["A) 44", "B) 88", "C) 880", "D) 1,760"],
+  answer: "B) 88",
+  explanation: "20% of 440 = (20/100) × 440 = 88.",
+  section: "Math"
+},
+{
+  id: "m21",
+  image: "m21.png",
+  question: "Argon is placed inside a container with a constant volume. The graph shows the estimated pressure y, in pounds per square inch (psi), of the argon when its temperature is x kelvins. What is the estimated pressure of the argon, in psi, when the temperature is 600 kelvins?",
+  options: ["A) 6", "B) 12", "C) 300", "D) 600"],
+  answer: "B) 12",
+  explanation: "The graph passes through the point (600, 12). This means that when the temperature is 600 kelvins, the estimated pressure is 12 psi.",
+  section: "Math"
+},
+{
+  id: "m22",
+  image: "m22.png",
+  question: "The function f is defined by f(x) = 4x − 3. What is the value of f(10)?",
+  options: ["A) −30", "B) 37", "C) 40", "D) 43"],
+  answer: "B) 37",
+  explanation: "Substituting 10 for x: f(10) = 4(10) − 3 = 40 − 3 = 37.",
+  section: "Math"
+},
+{
+  id: "m23",
+  image: "m23.png",
+  question: "Which expression is equivalent to 16x³y² + 14xy?",
+  options: ["A) 2xy(8xy + 7)", "B) 2xy(8x²y + 7)", "C) 14xy(2x²y + 1)", "D) 14xy(8x²y + 1)"],
+  answer: "B) 2xy(8x²y + 7)",
+  explanation: "The greatest common factor of 16x³y² and 14xy is 2xy. Factoring out 2xy gives 2xy(8x²y + 7).",
+  section: "Math"
+},
+{
+  id: "m24",
+  image: "m24.png",
+  question: "A veterinarian recommends that each day a certain rabbit should eat 25 calories per pound of the rabbit's weight, plus an additional 11 calories. Which equation represents this situation, where c is the total number of calories the veterinarian recommends the rabbit should eat each day if the rabbit's weight is x pounds?",
+  options: ["A) c = 25x", "B) c = 36x", "C) c = 11x + 25", "D) c = 25x + 11"],
+  answer: "D) c = 25x + 11",
+  explanation: "25 calories per pound times x pounds gives 25x calories, plus the additional 11 calories, gives c = 25x + 11.",
+  section: "Math"
+},
+{
+  id: "m25",
+  image: "m25.png",
+  question: "Line r in the xy-plane has a slope of 4 and passes through the point (0, 6). Which equation defines line r?",
+  options: ["A) y = −6x + 4", "B) y = 6x + 4", "C) y = 4x − 6", "D) y = 4x + 6"],
+  answer: "D) y = 4x + 6",
+  explanation: "Using slope-intercept form y = mx + b, with slope m = 4 and y-intercept b = 6 (since the line passes through (0, 6)), the equation is y = 4x + 6.",
+  section: "Math"
+},
+{
+  id: "m26",
+  image: "m26.png",
+  question: "A competitive diver dives from a platform into the water. The graph shows the height above the water y, in meters, of the diver x seconds after diving. What is the best interpretation of the x-intercept of the graph?",
+  options: ["A) The diver reaches a maximum height above the water at 1.6 seconds.", "B) The diver hits the water at 1.6 seconds.", "C) The diver reaches a maximum height above the water at 0.2 seconds.", "D) The diver hits the water at 0.2 seconds."],
+  answer: "B) The diver hits the water at 1.6 seconds.",
+  explanation: "The x-intercept is where y = 0, meaning the diver is 0 meters above the water. The graph intersects the x-axis between x = 1 and x = 2, so the diver hits the water at 1.6 seconds.",
+  section: "Math"
+},
+{
+  id: "m27",
+  image: "m27.png",
+  question: "The kinetic energy, in joules, of an object with mass 9 kilograms traveling at speed v meters per second is K(v) = (9/2)v². Which of the following is the best interpretation of K(34) = 5,202 in this context?",
+  options: ["A) The object traveling at 34 meters per second has a kinetic energy of 5,202 joules.", "B) The object traveling at 340 meters per second has a kinetic energy of 5,202 joules.", "C) The object traveling at 5,202 meters per second has a kinetic energy of 34 joules.", "D) The object traveling at 23,409 meters per second has a kinetic energy of 34 joules."],
+  answer: "A) The object traveling at 34 meters per second has a kinetic energy of 5,202 joules.",
+  explanation: "In K(34) = 5,202, the input 34 is the speed in meters per second and the output 5,202 is the kinetic energy in joules. Therefore, the object traveling at 34 m/s has a kinetic energy of 5,202 joules.",
+  section: "Math"
+},
+{
+  id: "m28",
+  image: "m28.png",
+  question: "The scatterplot shows the relationship between two variables x and y, along with a line of best fit. For how many of the 10 data points is the actual y-value greater than the y-value predicted by the line of best fit?",
+  options: ["A) 3", "B) 4", "C) 6", "D) 7"],
+  answer: "C) 6",
+  explanation: "Data points above the line of best fit have actual y-values greater than the predicted y-values. For the scatterplot shown, 6 of the 10 data points are above the line of best fit.",
+  section: "Math"
+},
+{
+  id: "m29",
+  image: "m29.png",
+  question: "At a movie theater, there are 350 customers located in theater A, B, or C. The probability of selecting a customer in theater A is 0.48, and the probability of selecting a customer in theater B is 0.24. How many customers are located in theater C?",
+  options: ["A) 28", "B) 40", "C) 84", "D) 98"],
+  answer: "D) 98",
+  explanation: "Theater A: 0.48 × 350 = 168 customers. Theater B: 0.24 × 350 = 84 customers. Theater C: 350 − 168 − 84 = 98 customers.",
+  section: "Math"
+},
+{
+  id: "m30",
+  image: "m30.png",
+  question: "Five sea turtles have nests with 149, 144, 148, 136, and 139 eggs. A sixth nest with 121 eggs is added to create a new data set. Which of the following correctly compares the means of the two data sets?",
+  options: ["A) The mean of the original data set is greater than the mean of the new data set.", "B) The mean of the original data set is less than the mean of the new data set.", "C) The means of both data sets are equal.", "D) There is not enough information to compare the means."],
+  answer: "A) The mean of the original data set is greater than the mean of the new data set.",
+  explanation: "The new value of 121 is less than every value in the original data set. Adding a value below the original mean pulls the new mean down, so the original mean is greater than the new mean.",
+  section: "Math"
+},
+{
+  id: "m31",
+  image: "m31.png",
+  question: "In △RST, the measure of ∠R is 63°. Which of the following could be the measure, in degrees, of ∠S?",
+  options: ["A) 116", "B) 118", "C) 126", "D) 180"],
+  answer: "A) 116",
+  explanation: "The sum of angles in a triangle is 180°. With ∠R = 63°, the sum of ∠S and ∠T must equal 117°. Therefore ∠S must be less than 117°. Of the choices, only 116 is less than 117.",
+  section: "Math"
+},
+{
+  id: "m32",
+  image: "m32.png",
+  question: "Which expression is equivalent to (8x³ + 8) − (x³ − 2)?",
+  options: ["A) 8x³ + 6", "B) 7x³ + 10", "C) 8x³ + 10", "D) 7x³ + 6"],
+  answer: "B) 7x³ + 10",
+  explanation: "(8x³ + 8) − (x³ − 2) = 8x³ + 8 − x³ + 2 = 7x³ + 10.",
+  section: "Math"
+},
+{
+  id: "m33",
+  image: "m33.png",
+  question: "If 4√(2x) = 16, what is the value of 6x?",
+  options: ["A) 24", "B) 48", "C) 72", "D) 96"],
+  answer: "B) 48",
+  explanation: "Dividing both sides by 4 gives √(2x) = 4. Squaring both sides gives 2x = 16, so x = 8. Therefore, 6x = 6(8) = 48.",
+  section: "Math"
+},
+{
+  id: "m34",
+  image: "m34.png",
+  question: "Rectangles ABCD and EFGH are similar. The length of each side of EFGH is 6 times the length of the corresponding side of ABCD. The area of ABCD is 54 square units. What is the area, in square units, of EFGH?",
+  options: ["A) 9", "B) 36", "C) 324", "D) 1,944"],
+  answer: "D) 1,944",
+  explanation: "When sides are scaled by a factor of 6, areas are scaled by 6² = 36. Therefore, the area of EFGH = 36 × 54 = 1,944 square units.",
+  section: "Math"
+},
+{
+  id: "m35",
+  image: "m35.png",
+  question: "Which expression is equivalent to 42aᵏ + 42a/k, where k > 0?",
+  options: ["A) 84aᵏ", "B) 84ak/2ᵏ", "C) 42a(k + 1)/k", "D) 42a(k² + 1)/k"],
+  answer: "D) 42a(k² + 1)/k",
+  explanation: "Rewriting with a common denominator of k: 42aᵏ + 42a/k = 42ak²/k + 42a/k = 42a(k² + 1)/k.",
+  section: "Math"
+},
+{
+  id: "m36",
+  image: "m36.png",
+  question: "Which quadratic equation has no real solutions?",
+  options: ["A) x² + 14x − 49 = 0", "B) x² − 14x + 49 = 0", "C) 5x² − 14x − 49 = 0", "D) 5x² − 14x + 49 = 0"],
+  answer: "D) 5x² − 14x + 49 = 0",
+  explanation: "Using the discriminant b² − 4ac: for choice D, (−14)² − 4(5)(49) = 196 − 980 = −784. Since the discriminant is negative, this equation has no real solutions.",
+  section: "Math"
+},
+{
+  id: "m37",
+  image: "m37.png",
+  question: "P(t) = 260(1.04)^((6/4)t). The function P models the population, in thousands, of a certain city t years after 2003. According to the model, the population is predicted to increase by 4% every n months. What is the value of n?",
+  options: ["A) 8", "B) 12", "C) 18", "D) 72"],
+  answer: "A) 8",
+  explanation: "The population increases by 4% every time the exponent (6/4)t increases by 1, meaning t increases by 4/6 = 2/3 of a year. Since there are 12 months in a year, (2/3) × 12 = 8 months. Therefore n = 8.",
+  section: "Math"
+},
+{
+  id: "m38",
+  image: "m38.png",
+  question: "A circle in the xy-plane has its center at (−1, 1). Line t is tangent to this circle at the point (5, −4). Which of the following points also lies on line t?",
+  options: ["A) (0, 6/5)", "B) (4, 7)", "C) (10, 2)", "D) (11, 1)"],
+  answer: "C) (10, 2)",
+  explanation: "The slope of the radius from (−1, 1) to (5, −4) is (−4 − 1)/(5 − (−1)) = −5/6. Line t is perpendicular to the radius, so its slope is 6/5. Checking (10, 2): slope from (5, −4) to (10, 2) = (2 − (−4))/(10 − 5) = 6/5. ✓",
+  section: "Math"
+},
 
 ];
