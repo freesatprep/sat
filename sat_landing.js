@@ -31,49 +31,6 @@ document.querySelector('.practiceMore').addEventListener('click', () => {
   window.location.href = 'sat_quiz.html';
 });
 
-const track = document.getElementById('carouselTrack');
-const dotsContainer = document.getElementById('carouselDots');
-const slideWidth = 76;
-let current = 0;
-
-const originalSlides = Array.from(track.querySelectorAll('.carousel-slide'));
-const firstClone = originalSlides[0].cloneNode(true);
-const lastClone  = originalSlides[originalSlides.length - 1].cloneNode(true);
-track.appendChild(firstClone);
-track.insertBefore(lastClone, originalSlides[0]);
-
-const total = originalSlides.length;
-
-originalSlides.forEach((_, i) => {
-  const dot = document.createElement('div');
-  dot.classList.add('carousel-dot');
-  if (i === 0) dot.classList.add('active');
-  dot.addEventListener('click', () => goTo(i + 1));
-  dotsContainer.appendChild(dot);
-});
-
-function updateDots(realIndex) {
-  document.querySelectorAll('.carousel-dot').forEach((d, i) => {
-    d.classList.toggle('active', i === realIndex);
-  });
-}
-
-function goTo(index, animate = true) {
-  track.style.transition = animate ? 'transform 0.4s ease' : 'none';
-  track.style.transform = `translateX(calc(-${index * slideWidth}% + 12%))`;
-  current = index;
-  updateDots(((index - 1) + total) % total);
-}
-
-track.addEventListener('transitionend', () => {
-  if (current === 0)         goTo(total, false);
-  if (current === total + 1) goTo(1, false);
-});
-
-document.getElementById('prevBtn').addEventListener('click', () => goTo(current - 1));
-document.getElementById('nextBtn').addEventListener('click', () => goTo(current + 1));
-goTo(1, false);
-
 function initBASlider(slider) {
   const before = slider.querySelector('.ba-before');
   const handle  = slider.querySelector('.ba-handle');
